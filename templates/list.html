@@ -1,0 +1,51 @@
+{% extends "header.html" %}
+{% load static %}
+{% block addassets %}
+    <script type="text/javascript"
+            src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="{% static "js/list.js" %}"></script>
+
+
+    <link href="//cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css" rel="stylesheet">
+
+{% endblock %}
+{% block content %}
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="promo">
+                        <h1>
+                            Existent urls
+                        </h1>
+                    </div>
+                    <table id="urls">
+                        <thead>
+                        <th>
+                            URL
+                        </th>
+                        <th>
+                            Shortened
+                        </th>
+                        <th>
+                            Customs
+                        </th>
+                        </thead>
+                        <tbody>
+                        {% for url in urls %}
+                            <tr>
+                                <td>{{ url.original }}</td>
+                                <td>{{ url.shortened }}</td>
+                                <td>{{ url.customs }}</td>
+                            </tr>
+                            {% empty %}
+                        {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
