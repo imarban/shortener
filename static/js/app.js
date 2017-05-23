@@ -1,13 +1,16 @@
+var clipboard = new Clipboard('#copyurl');
+
+
 var app = new Vue({
     delimiters: ['${', '}'],
     el: '#app',
     data: {
-        shortened: '',
         custom: '',
         url: '',
-        success: false,
-        error: false,
-        errors: []
+        shortenButton: true,
+        copyButton: false,
+        errors: [],
+        successMessage: ''
 
     },
     methods: {
@@ -22,17 +25,45 @@ var app = new Vue({
                 custom: vm.custom
             }, config)
                 .then(function (response) {
-                    vm.shortened = response.data.shortened;
                     vm.url = response.data.url;
-                    vm.success = true;
-                    vm.error = false;
+                    vm.shortenButton = false;
+                    vm.copyButton = true;
+                    vm.errors = [];
+                    vm.successMessage = "URL has been successfully shortened. " +
+                        "If you want to try another one please either click Copy button or delete the current URL";
                 })
                 .catch(function (error) {
                     vm.errors = error.data.errors;
                     vm.error = true;
                     vm.success = false;
+                    vm.successMessage = ''
                 })
+        },
+
+        afterCopy: function () {
+            var vm = this;
+            vm.shortenButton = true;
+            vm.copyButton = false;
+            vm.errors = [];
+            vm.url = '';
+            vm.successMessage = "URL has been copied to your clipboard"
+        }
+    },
+
+    watch: {
+        url: function (val) {
+            if (val === '') {
+                var vm = this;
+                vm.shortenButton = true;
+                vm.copyButton = false;
+                vm.errors = [];
+                vm.successMessage = '';
+            }
         }
     }
 });
 
+
+clipboard.on('success', function () {
+    app.afterCopy();
+});

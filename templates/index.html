@@ -29,10 +29,9 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="share-this"></div>
-                    <div class="alert alert-success" v-if="success">URL has been successfully shortened. Click Copy or
-                        CRTL+C to Copy it. <br><br> This is the url shortened <a v-bind:href="url">${url}</a>
+                    <div class="alert alert-success" v-if="successMessage">${successMessage}<br><br>
                     </div>
-                    <div class="alert alert-danger" v-if="error">
+                    <div class="alert alert-danger" v-if="errors.length > 0">
                         <ul v-for="error in errors">
                             <li v-for="msg in error[1]">
                                 ${ msg }
@@ -40,7 +39,7 @@
                         </ul>
                     </div>
                     <form action="{% url 'short_url' %}" id="main-form" role="form" method="post"
-                          v-on:submit.prevent="shorten">
+                          v-on:submit.prevent>
                         {% csrf_token %}
                         <div class="main-form">
                             <div class="row" id="single">
@@ -48,26 +47,26 @@
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-link"></i></span>
                                         <input type="text" class="form-control main-input" name="url" value=""
-                                               v-model="url"
-                                               placeholder="Paste a long url">
+                                               v-model="url" placeholder="Paste a long url" id="url">
                                     </div>
                                 </div>
                                 <div class="col-md-2">
                                     <button class="btn btn-default btn-block main-button" id="shortenurl"
-                                            v-if="!success"
-                                            type="submit">
+                                            v-if="shortenButton" type="submit" v-on:click="shorten">
                                         Shorten
                                     </button>
-                                    <button class="btn btn-primary btn-block main-button" id="copyurl" v-if="success"
-                                            type="button">
+                                    <button class="btn btn-primary btn-block main-button" id="copyurl" v-if="copyButton"
+                                            type="button" data-clipboard-target="#url">
                                         Copy
                                     </button>
+
+
                                 </div>
                             </div>
                         </div>
                         <!-- /.main-form -->
 
-                        <div class="main-advanced " style="">
+                        <div class="main-advanced" style="">
                             <div class="row">
                                 <div class="col-md-4">
                                     <h3>Custom Alias</h3>
