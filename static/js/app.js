@@ -57,7 +57,6 @@ var app = new Vue({
                 vm.shortenButton = true;
                 vm.copyButton = false;
                 vm.errors = [];
-                vm.successMessage = '';
             }
         }
     }
