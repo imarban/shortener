@@ -17,8 +17,6 @@ var app = new Vue({
                 headers: {"X-CSRFToken": csrftoken}
             };
             var vm = this;
-            console.log(vm.url);
-            console.log(vm.custom);
             axios.post('short', {
                 url: vm.url,
                 custom: vm.custom
@@ -30,12 +28,9 @@ var app = new Vue({
                     vm.error = false;
                 })
                 .catch(function (error) {
-                    console.log(error.data.errors);
                     vm.errors = error.data.errors;
-
                     vm.error = true;
                     vm.success = false;
-                    vm.answer = 'Error! Could not reach the API. ' + error
                 })
         }
     }

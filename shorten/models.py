@@ -8,10 +8,6 @@ class URLShortened(models.Model):
     count = models.IntegerField(default=0)
     hash_id = models.IntegerField(unique=True, null=False, db_index=True)
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.count = 0
-
     def __str__(self):
         return "Id: {}, Shortened {}, Original {}".format(self.id, self.shortened, self.original)
 

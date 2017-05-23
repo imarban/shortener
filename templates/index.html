@@ -19,14 +19,6 @@
                     <a class="navbar-brand" href="/">
                         Short.ly </a>
                 </div>
-                <div class="navbar-collapse collapse">
-                    <div class="navbar-collapse collapse">
-                        <ul class="nav navbar-nav navbar-right">
-                            <li><a href="http://gempixel.com/short/user/register" class="active">Get Started</a></li>
-                            <li><a href="http://gempixel.com/short/user/login">Login</a></li>
-                        </ul>
-                    </div>
-                </div>
             </div>
         </div>
     </header>
@@ -36,15 +28,9 @@
         <div class="container" id="app">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="promo">
-                        <h1>
-                            Short.ly
-                        </h1>
-                    </div>
-
                     <div class="share-this"></div>
                     <div class="alert alert-success" v-if="success">URL has been successfully shortened. Click Copy or
-                        CRTL+C to Copy it. <br><br> This is the url shortened ${url}
+                        CRTL+C to Copy it. <br><br> This is the url shortened <a v-bind:href="url">${url}</a>
                     </div>
                     <div class="alert alert-danger" v-if="error">
                         <ul v-for="error in errors">
@@ -93,36 +79,13 @@
                                                placeholder="Type your custom alias here" v-model="custom">
                                     </div>
                                 </div>
-                                <!-- /.col-md-4 -->
-                                <div class="col-md-4">
-                                    <h3>Password Protect</h3>
-                                    <p>By adding a password, you can restrict the access of statistics.</p>
-                                    <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                                        <input type="text" class="form-control" name="password" id="pass"
-                                               placeholder="Type your password here">
-                                    </div>
-                                </div>
-                                <!-- /.col-md-4 -->
-                                <div class="col-md-4">
-                                    <h3>Description</h3>
-                                    <p>This can be used to identify URLs on your account.</p>
-                                    <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-tag"></i></span>
-                                        <input type="text" class="form-control" name="description"
-                                               placeholder="Type your description here">
-                                    </div>
-                                </div>
-                                <!-- /.col-md-4 -->
-                            </div><!--/.row -->
-                        </div><!-- /.main-advanced -->
+                            </div>
+                        </div>
                         <input type="hidden" value="0" name="multiple" id="multiple-form">
                         <input type="hidden" value="cbe07409f3390759af5cc30264bc1722">
-                    </form><!--/.form-->
+                    </form>
                     <div class="call-to-action">
-                        <span>The best URL that you will ever find on the internet. It comes packed with tons of awesome features for only $22!</span>
-                        <a href="http://gempixel.com/short/user/register" class="btn btn-primary btn-lg">Get Started</a>
-                        <a href="#more" class="btn btn-primary btn-lg">Learn More</a>
+                        <span>The best URL shortener that you will ever find on the internet. Make shorter those loooong URLs </span>
                     </div>
                 </div>
             </div>
@@ -167,25 +130,15 @@
     <section class="light">
         <div class="container">
             <div class="row featurette">
-                <div class="col-sm-3">
-                    <i class="glyphicon glyphicon-lock"></i>
-                    <h3>Password Protect</h3>
-                    <p>Set a password to protect your links from unauthorized access.</p>
-                </div>
-                <div class="col-sm-3">
+                <div class="col-sm-6">
                     <i class="glyphicon glyphicon-globe"></i>
-                    <h3>Geotarget</h3>
-                    <p>Geotarget your links to redirect visitors to specialized pages and increase your conversion.</p>
+                    <h3>Short</h3>
+                    <p>Short those loong urls.</p>
                 </div>
-                <div class="col-sm-3">
-                    <i class="glyphicon glyphicon-briefcase"></i>
-                    <h3>Bundle</h3>
-                    <p>Bundle your links for easy access and share them with the public on your public profile.</p>
-                </div>
-                <div class="col-sm-3">
+                <div class="col-sm-6">
                     <i class="glyphicon glyphicon-share"></i>
                     <h3>Share</h3>
-                    <p>Share your links in one click via the dashboard.</p>
+                    <p>Share your links in one click</p>
                 </div>
             </div>
         </div>
@@ -202,32 +155,14 @@
                     <strong>Clicks Served</strong>
                 </div>
                 <div class="col-xs-4">
-                    <h3>2868</h3>
+                    <h3>0</h3>
                     <strong>Users Registered</strong>
                 </div>
             </div>
         </div>
     </section>
 
-    <script type="text/javascript">
-        var lang = {
-            "del": "Delete",
-            "url": "URL",
-            "count": "Country",
-            "copied": "Copied",
-            "geo": "Geotargeting data for",
-            "error": "Please enter a valid URL.",
-            "success": "URL has been successfully shortened. Click Copy or CRTL+C to Copy it.",
-            "stats": "You can access the statistic page via this link",
-            "copy": "Copied to clipboard.",
-            "from": "Redirect from",
-            "to": "Redirect to",
-            "share": "Share this on",
-            "congrats": "Congratulation! Your URL has been successfully shortened. You can share it on Facebook or Twitter by clicking the links below.",
-            "qr": "Copy QR Code",
-            "continue": "Continue"
-        };
-    </script>
+
     <script type="text/javascript" src="{% static "js/server.js" %}"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/vue/2.3.0/vue.js"></script>
     <script type="text/javascript" src="{% static "js/app.js" %}"></script>

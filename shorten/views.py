@@ -1,11 +1,11 @@
 # Create your views here.
-import json
 import http
+import json
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.aggregates import Sum
 from django.http.response import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.views.generic.base import TemplateView, View
 from django.views.generic.edit import ProcessFormView
 from django.views.generic.list import ListView
@@ -66,7 +66,7 @@ class ShowAllUrlsSaved(ListView):
     context_object_name = "urls"
 
     def get_queryset(self):
-        objects = [x for x in URLShortened.objects.all()]
+        objects = URLShortened.objects.all()
         for x in objects:
             x.customs = ", ".join([k.custom for k in CustomShortUrl.objects.filter(url_associated_id=x.id)])
         return objects

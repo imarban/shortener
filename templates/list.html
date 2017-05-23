@@ -28,6 +28,9 @@
                             Shortened
                         </th>
                         <th>
+                            Count
+                        </th>
+                        <th>
                             Customs
                         </th>
                         </thead>
@@ -35,7 +38,8 @@
                         {% for url in urls %}
                             <tr>
                                 <td>{{ url.original }}</td>
-                                <td>{{ url.shortened }}</td>
+                                <td><a href="{{ url.shortened }}" target="_blank">{{ url.shortened }}</a></td>
+                                <td>{{ url.count }}</td>
                                 <td>{{ url.customs }}</td>
                             </tr>
                             {% empty %}
