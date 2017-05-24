@@ -13,7 +13,7 @@ from django.views.generic.list import ListView
 
 from shorten.forms import ShortUrlForm
 from shorten.models import ShortUrl, Domain
-from shorten.shortener import Shortener, get_domain
+from shorten.shortener import Shortener
 from shortener import settings
 
 
@@ -84,6 +84,22 @@ class GetDomainCount(ListView):
     template_name = "list_domain.html"
     context_object_name = "domains"
     model = Domain
+
+
+class GetMyDomainCount(ListView):
+    template_name = "list_domain.html"
+    context_object_name = "domains"
+
+    def get_queryset(self):
+        domains = {}
+        short_urls = ShortUrl.objects.filter(user=self.request.user)
+        for short_url in short_urls:
+            if short_url.url_associated.domain.name in domains:
+                domains[short_url.url_associated.domain.name] += short_url.count
+            else:
+                domains[short_url.url_associated.domain.name] = 1
+
+        return [Domain(name=k, count=v) for k,v in domains.items()]
 
 
 class LogoutView(ProcessFormView):
