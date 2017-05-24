@@ -2,11 +2,10 @@ import math
 import string
 
 import random
-from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 from wrapt.decorators import synchronized
 
-from shorten.models import URLShortened, BadWords, CustomShortUrl
+from shorten.models import OriginalUrl, BadWords, ShortUrl
 
 
 class Shortener:
@@ -23,19 +22,18 @@ class Shortener:
         if custom:
             Shortener.validate_custom(custom)
 
-        try:
-            url_db_instance = URLShortened.objects.get(original=url)
-        except ObjectDoesNotExist:
-            hash_id, next_available_encoded = Shortener.get_next_encoded()
-            url_db_instance = URLShortened(original=url, hash_id=hash_id, shortened=next_available_encoded, user=user)
-            url_db_instance.save()
+        url_db_instance, created = OriginalUrl.objects.get_or_create(original=url)
+        if not custom:
+            hash_id, encoded = Shortener.get_next_encoded()
+        else:
+            hash_id = Shortener.decode(custom)
+            encoded = custom
 
-        if custom:
-            custom_db_instance = CustomShortUrl(custom=custom, url_associated=url_db_instance,
-                                                hash_id=Shortener.decode(custom))
-            custom_db_instance.save()
+        custom_db_instance = ShortUrl(shortened=encoded, url_associated=url_db_instance,
+                                      hash_id=hash_id, user=user)
+        custom_db_instance.save()
 
-        return url_db_instance
+        return custom_db_instance
 
     @staticmethod
     def get_next_encoded():
@@ -50,8 +48,7 @@ class Shortener:
 
     @staticmethod
     def is_already_taken(decoded):
-        return URLShortened.objects.filter(hash_id=decoded).count() > 0 or CustomShortUrl.objects.filter(
-            hash_id=decoded).count() > 0
+        return ShortUrl.objects.filter(hash_id=decoded).count() > 0
 
     @staticmethod
     def validate_custom(custom):
@@ -63,8 +60,7 @@ class Shortener:
     @staticmethod
     def __valid_uniqueness_custom(custom):
         custom_decoded = Shortener.decode(custom)
-        if URLShortened.objects.filter(hash_id=custom_decoded).count() > 0 or CustomShortUrl.objects.filter(
-                hash_id=custom_decoded).count() > 0:
+        if ShortUrl.objects.filter(hash_id=custom_decoded).count() > 0:
             raise AlreadyTakenError("Custom is already taken. Choose another one")
 
     @staticmethod
