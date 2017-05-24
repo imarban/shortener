@@ -16,32 +16,24 @@
                 <div class="col-md-12">
                     <div class="promo">
                         <h1>
-                            Existent urls
+                            Domain count
                         </h1>
                     </div>
                     <table id="urls">
                         <thead>
                         <th>
-                            URL
-                        </th>
-                        <th>
                             Domain
-                        </th>
-                        <th>
-                            Shortened
                         </th>
                         <th>
                             Count
                         </th>
                         </thead>
                         <tbody>
-                        {% for short_url in short_urls %}
+                        {% for domain in domains %}
                             <tr>
-                                <td>{{ short_url.url_associated.original }}</td>
-                                <td>{{ short_url.url_associated.domain.name }}</td>
-                                <td><a href="{{ short_url.shortened }}" target="_blank">{{ short_url.shortened }}</a>
+                                <td>{{ domain.name }}</td>
+                                <td>{{ domain.count }}
                                 </td>
-                                <td>{{ short_url.count }}</td>
                             </tr>
                             {% empty %}
                         {% endfor %}
