@@ -12,8 +12,8 @@ from django.views.generic.edit import ProcessFormView
 from django.views.generic.list import ListView
 
 from shorten.forms import ShortUrlForm
-from shorten.models import OriginalUrl, ShortUrl
-from shorten.shortener import Shortener
+from shorten.models import ShortUrl, Domain
+from shorten.shortener import Shortener, get_domain
 from shortener import settings
 
 
@@ -53,13 +53,16 @@ class VisitShortUrlView(View):
         decoded = Shortener.decode(encoded)
         try:
             url_shortened = ShortUrl.objects.select_for_update().get(hash_id=decoded)
+            domain = Domain.objects.select_for_update().get(name=url_shortened.url_associated.domain.name)
+
+            domain.count += 1
+            domain.save()
+            url_shortened.count += 1
+            url_shortened.save()
+
+            return redirect(url_shortened.url_associated.original)
         except ObjectDoesNotExist:
             raise Http404("URL not existent")
-
-        url_shortened.count += 1
-        url_shortened.save()
-
-        return redirect(url_shortened.url_associated.original)
 
 
 class ShowAllUrlsSaved(ListView):
@@ -75,6 +78,12 @@ class GetMyURLS(ListView):
     def get_queryset(self):
         objects = ShortUrl.objects.filter(user=self.request.user)
         return objects
+
+
+class GetDomainCount(ListView):
+    template_name = "list_domain.html"
+    context_object_name = "domains"
+    model = Domain
 
 
 class LogoutView(ProcessFormView):
