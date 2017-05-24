@@ -4,6 +4,7 @@ import string
 import random
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
+from wrapt.decorators import synchronized
 
 from shorten.models import URLShortened, BadWords, CustomShortUrl
 
@@ -17,6 +18,7 @@ class Shortener:
 
     @staticmethod
     @transaction.atomic
+    @synchronized
     def shorten(url, custom=''):
         if custom:
             Shortener.validate_custom(custom)
