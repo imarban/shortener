@@ -4,7 +4,7 @@ import json
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.aggregates import Sum
-from django.http.response import JsonResponse
+from django.http.response import JsonResponse, Http404
 from django.shortcuts import redirect
 from django.views.generic.base import TemplateView, View
 from django.views.generic.edit import ProcessFormView
@@ -52,8 +52,11 @@ class VisitShortUrlView(View):
         try:
             url_shortened = URLShortened.objects.get(hash_id=decoded)
         except ObjectDoesNotExist:
-            url_shortened = URLShortened.objects.get(
-                id=CustomShortUrl.objects.get(hash_id=decoded).url_associated_id)
+            try:
+                url_shortened = URLShortened.objects.get_(
+                    id=CustomShortUrl.objects.get(hash_id=decoded).url_associated_id)
+            except:
+                raise Http404("URL not existent")
 
         url_shortened.count += 1
         url_shortened.save()
