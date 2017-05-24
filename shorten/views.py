@@ -50,10 +50,10 @@ class VisitShortUrlView(View):
     def get(self, _, encoded):
         decoded = Shortener.decode(encoded)
         try:
-            url_shortened = URLShortened.objects.get(hash_id=decoded)
+            url_shortened = URLShortened.objects.select_for_update().get(hash_id=decoded)
         except ObjectDoesNotExist:
             try:
-                url_shortened = URLShortened.objects.get_(
+                url_shortened = URLShortened.objects.select_for_update().get(
                     id=CustomShortUrl.objects.get(hash_id=decoded).url_associated_id)
             except:
                 raise Http404("URL not existent")
