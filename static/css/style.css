@@ -2,6 +2,7 @@ body {
   background-color: #f1f4f9;
   font-size: 13px;
   min-height: 100%;
+  font-family: Open Sans;
 }
 body iframe[src="about:blank"] {
   display: none;
