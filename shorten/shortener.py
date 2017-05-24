@@ -3,6 +3,7 @@ import string
 
 import random
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import transaction
 
 from shorten.models import URLShortened, BadWords, CustomShortUrl
 
@@ -15,6 +16,7 @@ class Shortener:
     MAX_NUMBER = 2000000
 
     @staticmethod
+    @transaction.atomic
     def shorten(url, custom=''):
         if custom:
             Shortener.validate_custom(custom)
