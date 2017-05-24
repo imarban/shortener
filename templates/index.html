@@ -19,6 +19,27 @@
                     <a class="navbar-brand" href="/">
                         Short.ly </a>
                 </div>
+                <div class="navbar-collapse collapse">
+                    <div class="navbar-collapse collapse">
+                        {% if not request.user.is_authenticated %}
+                            <ul class="nav navbar-nav navbar-right">
+                                <li><a href="/oauth/login/google-oauth2/" class="active">Login</a></li>
+                            </ul>
+                        {% else %}
+                            <form action="/logout/" method="post">
+                            {% csrf_token %}
+                                <ul class="nav navbar-nav navbar-right">
+                                    <li><a>Hello {{ request.user.username }}</a></li>
+                                    <li>
+                                        <button class="btn btn-default btn-block" type="submit">Logout
+                                        </button>
+                                    </li>
+                                </ul>
+                            </form>
+                        {% endif %}
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
