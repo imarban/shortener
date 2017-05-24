@@ -25,7 +25,7 @@ SECRET_KEY = 'i_rc(-=$6$4*+_*vh@@ed#_r0i9c=3_kb9hp*y9k=s3dxf+*71'
 DEBUG = True
 
 ALLOWED_HOSTS = ['shortly1.herokuapp.com', 'localhost:8000', '127.0.0.1:8000', '127.0.0.1']
-HOST = ALLOWED_HOSTS[2]
+HOST = ALLOWED_HOSTS[0]
 
 # Application definition
 
