@@ -12,7 +12,7 @@ class Shortener:
     LETTER_OFFSET = ord(string.ascii_lowercase[0])
     DIGIT_OFFSET = ord(string.digits[0]) - len(string.ascii_lowercase)
     BASE = len(AVAILABLE_CHARS)
-    MAX_NUMBER = 1000000
+    MAX_NUMBER = 2000000
 
     @staticmethod
     def shorten(url, custom=''):
@@ -52,11 +52,19 @@ class Shortener:
     @staticmethod
     def validate_custom(custom):
         custom = custom.lower().strip()
+
+        Shortener.__valid_uniqueness_custom(custom)
+        Shortener.__valid_characters_custom(custom)
+
+    @staticmethod
+    def __valid_uniqueness_custom(custom):
         custom_decoded = Shortener.decode(custom)
         if URLShortened.objects.filter(hash_id=custom_decoded).count() > 0 or CustomShortUrl.objects.filter(
                 hash_id=custom_decoded).count() > 0:
             raise AlreadyTakenError("Custom is already taken. Choose another one")
 
+    @staticmethod
+    def __valid_characters_custom(custom):
         for c in custom:
             if not (ord('a') <= ord(c) <= ord('z') or ord('0') <= ord(c) <= ord('9')):
                 raise AlreadyTakenError("Custom value can only contain letters and digits")
