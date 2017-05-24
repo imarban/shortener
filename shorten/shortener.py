@@ -19,7 +19,7 @@ class Shortener:
     @staticmethod
     @transaction.atomic
     @synchronized
-    def shorten(url, custom=''):
+    def shorten(url, custom='', user=None):
         if custom:
             Shortener.validate_custom(custom)
 
@@ -27,7 +27,7 @@ class Shortener:
             url_db_instance = URLShortened.objects.get(original=url)
         except ObjectDoesNotExist:
             hash_id, next_available_encoded = Shortener.get_next_encoded()
-            url_db_instance = URLShortened(original=url, hash_id=hash_id, shortened=next_available_encoded)
+            url_db_instance = URLShortened(original=url, hash_id=hash_id, shortened=next_available_encoded, user=user)
             url_db_instance.save()
 
         if custom:

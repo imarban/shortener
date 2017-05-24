@@ -2,9 +2,10 @@
 import http
 import json
 
+from django.contrib.auth import logout as auth_logout
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.aggregates import Sum
-from django.http.response import JsonResponse, Http404
+from django.http.response import JsonResponse, Http404, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.views.generic.base import TemplateView, View
 from django.views.generic.edit import ProcessFormView
@@ -35,7 +36,8 @@ class ShortUrlView(ProcessFormView):
         if form.is_valid():
             to_shorten = form.cleaned_data['url']
             custom = form.cleaned_data['custom']
-            result = Shortener.shorten(to_shorten, custom)
+            user = request.user if not request.user.is_anonymous() else None
+            result = Shortener.shorten(to_shorten, custom, user=user)
             shortened = custom if custom else result.shortened
             context = {'shortened': shortened,
                        'url': "http://" + settings.HOST + "/" + shortened}
@@ -73,3 +75,20 @@ class ShowAllUrlsSaved(ListView):
         for x in objects:
             x.customs = ", ".join([k.custom for k in CustomShortUrl.objects.filter(url_associated_id=x.id)])
         return objects
+
+
+class GetMyURLS(ListView):
+    template_name = "list.html"
+    context_object_name = "urls"
+
+    def get_queryset(self):
+        objects = URLShortened.objects.filter(user=self.request.user)
+        for x in objects:
+            x.customs = ", ".join([k.custom for k in CustomShortUrl.objects.filter(url_associated_id=x.id)])
+        return objects
+
+
+class LogoutView(ProcessFormView):
+    def post(self, request, *args, **kwargs):
+        auth_logout(request)
+        return HttpResponseRedirect('/')

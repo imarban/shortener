@@ -13,10 +13,11 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
-
+from django.conf.urls import url, include
 # from django.contrib import admin
-from shorten.views import ShortenView, ShortUrlView, VisitShortUrlView, ShowAllUrlsSaved
+from django.contrib.auth.decorators import login_required
+
+from shorten.views import ShortenView, ShortUrlView, VisitShortUrlView, ShowAllUrlsSaved, LogoutView, GetMyURLS
 
 urlpatterns = [
     # url(r'^admin/', admin.site.urls),
@@ -24,5 +25,8 @@ urlpatterns = [
     url(r'^$', ShortenView.as_view(), name="index"),
     url(r'^short$', ShortUrlView.as_view(), name="short_url"),
     url(r'^all$', ShowAllUrlsSaved.as_view(), name="all_urls"),
+    url(r'^mine', login_required(GetMyURLS.as_view()), name="all_urls"),
+    url(r'^logout/$', LogoutView.as_view(), name='logout'),
+    url(r'^oauth/', include('social_django.urls', namespace='social')),
     url(r'^(?P<encoded>[a-z0-9]+)$', VisitShortUrlView.as_view(), name="visit_shorten")
 ]
