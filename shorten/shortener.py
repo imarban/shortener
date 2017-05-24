@@ -1,11 +1,12 @@
 import math
 import string
+from urllib.parse import urljoin
 
 import random
 from django.db import transaction
 from wrapt.decorators import synchronized
 
-from shorten.models import OriginalUrl, BadWords, ShortUrl
+from shorten.models import OriginalUrl, BadWords, ShortUrl, Domain
 
 
 class Shortener:
@@ -22,7 +23,8 @@ class Shortener:
         if custom:
             Shortener.validate_custom(custom)
 
-        url_db_instance, created = OriginalUrl.objects.get_or_create(original=url)
+        domain_db_instance, created = Domain.objects.get_or_create(name=get_domain(url))
+        url_db_instance, created = OriginalUrl.objects.get_or_create(original=url, domain=domain_db_instance)
         if not custom:
             hash_id, encoded = Shortener.get_next_encoded()
         else:
@@ -120,3 +122,7 @@ class WhiteListWordValidator:
     @staticmethod
     def is_valid(word):
         return BadWords.objects.filter(word=word).count() == 0
+
+
+def get_domain(url):
+    return urljoin(url, '/')

@@ -3,11 +3,18 @@ from django.db import models
 
 
 # Create your models here.
+
+class Domain(models.Model):
+    name = models.CharField(max_length=100, db_index=True)
+    count = models.IntegerField(default=0)
+
+
 class OriginalUrl(models.Model):
     original = models.URLField(max_length=250, db_index=True, unique=True)
+    domain = models.ForeignKey(Domain, null=False)
 
     def __str__(self):
-        return "Id: {}, Shortened {}, Original {}".format(self.id, self.shortened, self.original)
+        return "Id: {}, Shortened {}, Original {}".format(self.id, self.domain, self.original)
 
 
 class ShortUrl(models.Model):
