@@ -30,17 +30,14 @@
                         <th>
                             Count
                         </th>
-                        <th>
-                            Customs
-                        </th>
                         </thead>
                         <tbody>
-                        {% for url in urls %}
+                        {% for short_url in short_urls %}
                             <tr>
-                                <td>{{ url.original }}</td>
-                                <td><a href="{{ url.shortened }}" target="_blank">{{ url.shortened }}</a></td>
-                                <td>{{ url.count }}</td>
-                                <td>{{ url.customs }}</td>
+                                <td>{{ short_url.url_associated.original }}</td>
+                                <td><a href="{{ short_url.shortened }}" target="_blank">{{ short_url.shortened }}</a>
+                                </td>
+                                <td>{{ short_url.count }}</td>
                             </tr>
                             {% empty %}
                         {% endfor %}

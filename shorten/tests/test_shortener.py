@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 # Create your tests here.
-from shorten.models import URLShortened, CustomShortUrl
+from shorten.models import OriginalUrl, ShortUrl
 from shorten.shortener import Shortener, AlreadyTakenError
 
 
@@ -42,19 +42,21 @@ class ShortenerSaveTest(TestCase):
     def test_save_without_custom(self):
         url = "www.a.com"
         Shortener.shorten(url=url)
-        result = URLShortened.objects.get(original=url)
+        result = OriginalUrl.objects.get(original=url)
+        result_custom = ShortUrl.objects.get(url_associated=result.id)
+
         self.assertEqual(result.original, url)
-        self.assertEqual(result.shortened, Shortener.encode(result.hash_id))
+        self.assertEqual(result_custom.shortened, Shortener.encode(result_custom.hash_id))
 
     def test_save_with_custom(self):
         url = "www.b.com"
         custom = "nope"
         Shortener.shorten(url=url, custom=custom)
-        result_url = URLShortened.objects.get(original=url)
-        result_custom = CustomShortUrl.objects.get(custom=custom)
+        result_url = OriginalUrl.objects.get(original=url)
+        result_custom = ShortUrl.objects.get(shortened=custom)
 
         self.assertEqual(result_url.original, url)
-        self.assertEqual(result_url.shortened, Shortener.encode(result_url.hash_id))
+        self.assertEqual(result_custom.shortened, Shortener.encode(result_custom.hash_id))
         self.assertEqual(result_custom.url_associated_id, result_url.id)
 
     def test_save_existent(self):
@@ -62,17 +64,17 @@ class ShortenerSaveTest(TestCase):
         result_url1 = Shortener.shorten(url=url)
         result_url2 = Shortener.shorten(url=url)
 
-        self.assertEqual(result_url1, result_url2)
+        self.assertNotEqual(result_url1, result_url2)
 
     def test_save_existent_with_custom(self):
         url = "www.c.com"
         custom = "kame"
         result_url1 = Shortener.shorten(url=url)
         result_url2 = Shortener.shorten(url=url, custom=custom)
-        custom_result = CustomShortUrl.objects.get(custom=custom)
+        custom_result = ShortUrl.objects.get(shortened=custom)
 
-        self.assertEqual(result_url1, result_url2)
-        self.assertEqual(result_url1.id, custom_result.url_associated_id)
+        self.assertNotEqual(result_url1, result_url2)
+        self.assertEqual(result_url1.url_associated_id, custom_result.url_associated_id)
 
     def test_save_existent_custom(self):
         custom = "right"

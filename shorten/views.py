@@ -12,7 +12,7 @@ from django.views.generic.edit import ProcessFormView
 from django.views.generic.list import ListView
 
 from shorten.forms import ShortUrlForm
-from shorten.models import URLShortened, CustomShortUrl
+from shorten.models import OriginalUrl, ShortUrl
 from shorten.shortener import Shortener
 from shortener import settings
 
@@ -22,8 +22,8 @@ class ShortenView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['urls_created'] = URLShortened.objects.count()
-        context['clicks_served'] = URLShortened.objects.aggregate(Sum('count'))["count__sum"]
+        context['urls_created'] = ShortUrl.objects.count()
+        context['clicks_served'] = ShortUrl.objects.aggregate(Sum('count'))["count__sum"] or 0
 
         return context
 
@@ -35,7 +35,7 @@ class ShortUrlView(ProcessFormView):
 
         if form.is_valid():
             to_shorten = form.cleaned_data['url']
-            custom = form.cleaned_data['custom']
+            custom = form.cleaned_data["custom"]
             user = request.user if not request.user.is_anonymous() else None
             result = Shortener.shorten(to_shorten, custom, user=user)
             shortened = custom if custom else result.shortened
@@ -52,39 +52,28 @@ class VisitShortUrlView(View):
     def get(self, _, encoded):
         decoded = Shortener.decode(encoded)
         try:
-            url_shortened = URLShortened.objects.select_for_update().get(hash_id=decoded)
+            url_shortened = ShortUrl.objects.select_for_update().get(hash_id=decoded)
         except ObjectDoesNotExist:
-            try:
-                url_shortened = URLShortened.objects.select_for_update().get(
-                    id=CustomShortUrl.objects.get(hash_id=decoded).url_associated_id)
-            except:
-                raise Http404("URL not existent")
+            raise Http404("URL not existent")
 
         url_shortened.count += 1
         url_shortened.save()
 
-        return redirect(url_shortened.original)
+        return redirect(url_shortened.url_associated.original)
 
 
 class ShowAllUrlsSaved(ListView):
     template_name = "list.html"
-    context_object_name = "urls"
-
-    def get_queryset(self):
-        objects = URLShortened.objects.all()
-        for x in objects:
-            x.customs = ", ".join([k.custom for k in CustomShortUrl.objects.filter(url_associated_id=x.id)])
-        return objects
+    context_object_name = "short_urls"
+    model = ShortUrl
 
 
 class GetMyURLS(ListView):
     template_name = "list.html"
-    context_object_name = "urls"
+    context_object_name = "short_urls"
 
     def get_queryset(self):
-        objects = URLShortened.objects.filter(user=self.request.user)
-        for x in objects:
-            x.customs = ", ".join([k.custom for k in CustomShortUrl.objects.filter(url_associated_id=x.id)])
+        objects = ShortUrl.objects.filter(user=self.request.user)
         return objects
 
 
