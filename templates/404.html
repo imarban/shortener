@@ -1,0 +1,27 @@
+{% extends "header.html" %}
+{% load static %}
+{% block content %}
+    <br/>
+    <br/>
+    <br/>
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-2"><!--></div>
+                <div class="col-md-6">
+                    <img src="{% static "images/404.gif" %}"/>
+                </div>
+                <div class="col-md-2"><!--></div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-2"><!--></div>
+                <div class="col-md-6 text-center">
+                    <span class="text-center"><h3>There is no url mapped. <a href="/">Go to main</a></h3></span>
+                </div>
+                <div class="col-md-2"><!--></div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
