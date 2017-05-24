@@ -99,7 +99,7 @@ class GetMyDomainCount(ListView):
             else:
                 domains[short_url.url_associated.domain.name] = 1
 
-        return [Domain(name=k, count=v) for k,v in domains.items()]
+        return [Domain(name=k, count=v) for k, v in domains.items()]
 
 
 class LogoutView(ProcessFormView):
