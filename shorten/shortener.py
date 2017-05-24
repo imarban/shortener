@@ -50,7 +50,7 @@ class Shortener:
 
     @staticmethod
     def is_already_taken(decoded):
-        return ShortUrl.objects.filter(hash_id=decoded).count() > 0
+        return ShortUrl.objects.filter(hash_id=decoded).count() > 0 or BadWords.objects.filter(word=decoded).count() > 0
 
     @staticmethod
     def validate_custom(custom):
@@ -58,6 +58,12 @@ class Shortener:
 
         Shortener.__valid_uniqueness_custom(custom)
         Shortener.__valid_characters_custom(custom)
+        Shortener.__valid_bad_word(custom)
+
+    @staticmethod
+    def __valid_bad_word(custom):
+        if BadWords.objects.filter(word=custom).count() > 0:
+            raise AlreadyTakenError("Custom is already taken. Choose another one")
 
     @staticmethod
     def __valid_uniqueness_custom(custom):

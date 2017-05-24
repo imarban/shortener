@@ -1,0 +1,44 @@
+[
+  {
+    "model": "shorten.badwords",
+    "pk": 1,
+    "fields": {
+      "word": "all"
+    }
+  },
+  {
+    "model": "shorten.badwords",
+    "pk": 2,
+    "fields": {
+      "word": "short"
+    }
+  },
+  {
+    "model": "shorten.badwords",
+    "pk": 3,
+    "fields": {
+      "word": "domains"
+    }
+  },
+  {
+    "model": "shorten.badwords",
+    "pk": 4,
+    "fields": {
+      "word": "mine"
+    }
+  },
+  {
+    "model": "shorten.badwords",
+    "pk": 5,
+    "fields": {
+      "word": "logout"
+    }
+  },
+  {
+    "model": "shorten.badwords",
+    "pk": 6,
+    "fields": {
+      "word": "oauth"
+    }
+  }
+]
