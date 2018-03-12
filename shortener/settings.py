@@ -143,8 +143,6 @@ LOGIN_URL = '/oauth/login/google-oauth2/'
 LOGOUT_URL = '/oauth/disconnect/google-oauth2/'
 LOGIN_REDIRECT_URL = '/'
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '1089815140971-k7mp2qbv6m8b2ulvtcnolgob05p1ac77.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'LreEqeGPiWi8ipFk1wbaqvRN'
 SOCIAL_AUTH_GOOGLE_OAUTH2_IGNORE_DEFAULT_SCOPE = True
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
     'https://www.googleapis.com/auth/userinfo.email',
